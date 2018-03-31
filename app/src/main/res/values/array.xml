@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="TaskItem">
+        <item>发动机卫生</item>
+        <item>空滤卫生</item>
+        <item>电瓶卫生</item>
+        <item>药品箱</item>
+        <item>gps和监控</item>
+        <item>灭火器</item>
+        <item>应急门</item>
+        <item>安全锤	</item>
+        <item>机油量</item>
+        <item>防冻液量</item>
+        <item>制动液</item>
+        <item>皮带松紧度</item>
+        <item>轮胎气压及螺丝</item>
+        <item>灯光</item>
+        <item>路牌</item>
+        <item>离合</item>
+        <item>制动器</item>
+        <item>方向盘</item>
+        <item>仪表盘</item>
+    </array>
+    <array name="driverTaskDefault">
+        <item>整洁</item>
+        <item>整洁</item>
+        <item>整洁</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+        <item>正常</item>
+
+
+
+    </array>
+
+
+</resources>
