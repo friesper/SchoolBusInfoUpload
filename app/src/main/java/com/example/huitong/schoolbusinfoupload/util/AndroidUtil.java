@@ -47,13 +47,23 @@ public class AndroidUtil {
         }
         return  editor.commit();
     }
-    public static  boolean saveUserTyoe(SharedPreferences sharedPreferences, String userType){
+    public static  boolean saveUserType(SharedPreferences sharedPreferences, String userType){
         SharedPreferences.Editor editor=sharedPreferences.edit();
         if (userType!=null) {
             editor.putString("userType", userType);
         }
         return  editor.commit();
 
+    }
+    public static boolean saveInfo(SharedPreferences sharedPreferences,String name,String content){
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putString(name, content);
+        return editor.commit();
+    }
+    public static boolean saveInfo(SharedPreferences sharedPreferences,String name,Integer content){
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putInt(name, content);
+        return editor.commit();
     }
     public static boolean savedUsernameAndPassword(SharedPreferences sharedPreferences, User user){
         SharedPreferences.Editor editor=sharedPreferences.edit();
@@ -97,73 +107,6 @@ public class AndroidUtil {
         return cookie;
     }
 
-    public  static boolean login(final Context context, final Handler handler, final Activity activity, final ProgressDialog progressDialog){
-        final SharedPreferences sharedPreferences=context.getSharedPreferences("userInfo",Context.MODE_PRIVATE);
-        final String url="http://192.168.1.2/mobile/login";
-        final HashMap map=new HashMap();
-        final OkHttpClient httpClient= new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)    .readTimeout(5,TimeUnit.SECONDS).build();
-        User user=getUserNameAndPassword(sharedPreferences);
-        Log.d("AndroidUtil","username       "+user.getPassWord()+"userpassword"+user.getUserName());
-        RequestBody requestBody=RequestBody.create(JSON, com.alibaba.fastjson.JSON.toJSONString(user));
-        final Request request=new Request.Builder().post(requestBody).url(url).build();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response response = httpClient.newCall(request).execute();
-                    if (response.isSuccessful()) {
-                        List<String> list=response.headers("set-cookie");
-                        map.put("set-cookie",list.get(0));
-                        Log.d("LoginActivity",list.get(0));
-                        if (AndroidUtil.saveSession(sharedPreferences,map)){
-                            String content= response.body().string();
-                            if (content.contains("Driver")){
-                                JSONObject jsonObject = JSONObject.parseObject(content);
-                                String  message = (String) jsonObject.get("message");
-                                message=message.substring(message.indexOf('{'));
-                                message=message.replace('=',':');
-                                AndroidUtil.saveUserInfo(sharedPreferences,message);
-                            }
-                        }else {
-                            AndroidUtil.saveSession(sharedPreferences,map);
-                        }
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                            progressDialog.dismiss();
-                            }
-                        });
-
-                    } else {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressDialog.dismiss();
-                                AlertDialog.Builder alertDialog=new AlertDialog.Builder(context);
-                                alertDialog.setMessage("账户信息过期，请重新登陆");
-                                alertDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent=new Intent();
-                                        intent.setClass(context,LoginActivity.class);
-                                        context.startActivity(intent);
-                                        activity.finish();
-                                    }
-                                });
-                                alertDialog.setCancelable(false);
-                                alertDialog.create().show();
-
-                            }
-                        });
-                    }
-
-                } catch (IOException e) {
-                    Log.d("LoginActivity",e.getMessage());
-                }
-            }
-        }).start();
-        return false;
-    }
 
 
 

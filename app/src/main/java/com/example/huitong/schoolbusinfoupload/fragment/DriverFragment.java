@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.example.huitong.schoolbusinfoupload.R;
 import com.example.huitong.schoolbusinfoupload.activity.DriverTaskActivity;
 import com.example.huitong.schoolbusinfoupload.activity.LoginActivity;
+import com.example.huitong.schoolbusinfoupload.activity.NurseTaskActivity;
 import com.example.huitong.schoolbusinfoupload.util.AndroidUtil;
 
 import java.io.IOException;
@@ -55,63 +57,22 @@ public class DriverFragment extends Fragment implements View.OnClickListener {
             case  R.id.startTask:
                 Intent intent=new Intent();
                 if (userType!=null&&userType.equals("driver")){
+                    Log.d(driverFragmentTag,"userType" +userType);
                     intent.setClass(getActivity(),DriverTaskActivity.class);
                     startActivity(intent);
                 }
                 else {
+                    if (userType!=null&&userType.equals("nurse")){
+                        Log.d(driverFragmentTag,"userType" +userType);
+                        intent.setClass(getActivity(), NurseTaskActivity.class);
+                        startActivity(intent);
+                    }
                 }
+                break;
+                default:
+                    break;
         }
         
     }
 
-    private void Login() {
-        SharedPreferences sharedPreferences=getActivity().getSharedPreferences(LoginActivity.SPFILENAME, Context.MODE_PRIVATE);
-        String cookie=AndroidUtil.getCookie(sharedPreferences);
-        Log.d(driverFragmentTag,cookie);
-        final OkHttpClient httpClient= new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)    .readTimeout(5,TimeUnit.SECONDS).build();
-        final Request request=new Request.Builder().headers(new Headers.Builder().add("Cookie",cookie).build()).get().url(url).build();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Response response = httpClient.newCall(request).execute();
-
-                    if (response.isSuccessful()){
-                        String content=response.body().string();
-
-                        if (content.contains("Login")){
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                Toast.makeText(getActivity(),"登陆失效，请重新登陆",Toast.LENGTH_LONG).show();
-                                Intent intent=new Intent();
-                                intent.setClass(getActivity(),LoginActivity.class);
-                                startActivity(intent);
-                                }
-                            });
-                        }
-                        else {
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent intent=new Intent();
-                                    intent.setClass(getActivity(),DriverTaskActivity.class);
-                                    startActivity(intent);
-                                }
-                            });
-                        }
-                        Log.d(driverFragmentTag,content);
-                        Log.d(driverFragmentTag,String.valueOf(response.code()));
-                    }else {
-                        Log.d(driverFragmentTag,"failed");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d(driverFragmentTag,e.getMessage());
-                }
-            }
-        }).start();
-
-    }
 }

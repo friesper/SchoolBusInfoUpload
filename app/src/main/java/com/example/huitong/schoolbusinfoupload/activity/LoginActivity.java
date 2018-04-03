@@ -1,6 +1,7 @@
 package com.example.huitong.schoolbusinfoupload.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ import static com.example.huitong.schoolbusinfoupload.util.AndroidUtil.SPFILENAM
 
 public class LoginActivity extends AppCompatActivity {
     public static String SPFILENAME="userInfo";
+    ProgressDialog progressDialog;
     public  static  OkHttpClient mOkHttpClient;
     Handler handler=new Handler();
     public static final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
@@ -68,18 +70,26 @@ public class LoginActivity extends AppCompatActivity {
         user.setUserName(username.getText().toString());
         user.setPassWord(password.getText().toString());
         Log.d("LoginActivity",com.alibaba.fastjson.JSON.toJSONString(user));
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setTitle("Tip");
+        progressDialog.setMessage("正在登陆");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         final OkHttpClient httpClient= new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)    .readTimeout(5,TimeUnit.SECONDS).build();
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 /*Login(username, password, user, url, httpClient, map);*/
+                progressDialog.show();
                 loginss(username, password, url, user);
             }
         });
 
     }
 
-    private void loginss(EditText username, EditText password, String url, User user) {
+    private void loginss(EditText username, final EditText password, String url, User user) {
         if (TextUtils.isEmpty(username.getText()) || TextUtils.isEmpty(password.getText())) {
             Toast.makeText(LoginActivity.this,"账号和密码不能为空",Toast.LENGTH_LONG).show();
         } else {
@@ -119,89 +129,52 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                        }
+                    });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                final String str = response.body().string();
-                Log.d(tags, str);
+                if (response.code() == 404) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),"账号或密码错误",Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+                        }
+                    });
+                } else if (response.code() == 200) {
+                    final String str = response.body().string();
+                    Log.d(tags, str);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "请求成功", Toast.LENGTH_SHORT).show();
-                         Intent intent=new Intent();
-                        intent.putExtra("userType","driver");
-                        intent.putExtra("userInfo",str);
-                        intent.setClass(LoginActivity.this,MainActivity.class);
-                        startActivity(intent);
-                    }
-                });
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "请求成功", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                            Intent intent = new Intent();
+                            if (str.contains("driver")) {
+                                intent.putExtra("userType", "driver");
+                            } else {
+                                intent.putExtra("userType", "nurse");
+                            }
+                            intent.putExtra("userInfo", str);
+                            intent.setClass(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                }
             }
-
         });
 
+
     }
     }
 
-    private void Login(EditText username, EditText password, final User user, String url, final OkHttpClient httpClient, final Map<String, String> map) {
-        if (TextUtils.isEmpty(username.getText()) || TextUtils.isEmpty(password.getText())) {
-            Toast.makeText(LoginActivity.this,"账号和密码不能为空",Toast.LENGTH_LONG).show();
-        } else {
-            user.setUserName(username.getText().toString());
-            user.setPassWord(password.getText().toString());
-            Log.d("LoginActivity",com.alibaba.fastjson.JSON.toJSONString(user));
-            RequestBody requestBody=RequestBody.create(JSON, com.alibaba.fastjson.JSON.toJSONString(user));
-            final Request request=new Request.Builder().post(requestBody).url(url).build();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-
-                        Response response = httpClient.newCall(request).execute();
-                        SharedPreferences sharedPreferences=getSharedPreferences(SPFILENAME,MODE_PRIVATE);
-
-                        if (response.isSuccessful()) {
-                            AndroidUtil.savedUsernameAndPassword(sharedPreferences,user);
-                            List<String> list=response.headers("set-cookie");
-                            map.put("set-cookie",list.get(0));
-                            Log.d("LoginActivity",list.get(0));
-                            if (AndroidUtil.saveSession(sharedPreferences,map)){
-                                String content= response.body().string();
-                               if (content.contains("Driver")){
-                                   JSONObject jsonObject = JSONObject.parseObject(content);
-                                   String  message = (String) jsonObject.get("message");
-                                   message=message.substring(message.indexOf('{'));
-                                   message=message.replace('=',':');
-                                   AndroidUtil.saveUserInfo(sharedPreferences,message);
-                                   Log.d("LoginActivity","userInfo"+AndroidUtil.getUserInfo(sharedPreferences));
-                                    final Intent intent=new Intent();
-                                    intent.putExtra("userType","driver");
-                                    intent.putExtra("userInfo",message);
-                                    intent.setClass(LoginActivity.this,MainActivity.class);
-                                    handler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            startActivity(intent);
-                                            finish();
-                                        }
-                                    });
-                               }
-                            }else {
-                                AndroidUtil.saveSession(sharedPreferences,map);
-                            }
-                        } else {
-                            Log.d("LoginActivity", "login failed");
-                        }
-
-                    } catch (IOException e) {
-                        Log.d("LoginActivity",e.getMessage());
-                    }
-                }
-            }).start();
-        }
-    }
 
 
 }

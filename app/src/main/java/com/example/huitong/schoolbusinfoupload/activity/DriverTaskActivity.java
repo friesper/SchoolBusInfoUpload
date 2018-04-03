@@ -85,7 +85,6 @@ public class DriverTaskActivity extends AppCompatActivity implements View.OnClic
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        AndroidUtil.login(this,handler,this,progressDialog);
         Button button=findViewById(R.id.submitTask);
         sharedPreferences=getSharedPreferences("USERINFO",MODE_PRIVATE);
         button.setOnClickListener(this);
@@ -101,7 +100,7 @@ public class DriverTaskActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()){
             case R.id.submitTask:
                 upLoadInfo();
-
+                break;
             default:
                 break;
         }
@@ -123,7 +122,13 @@ public class DriverTaskActivity extends AppCompatActivity implements View.OnClic
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(getApplicationContext(), "请求shibai", Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "请求shibai", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
 
             }
 
