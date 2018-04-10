@@ -45,7 +45,7 @@ import static com.example.huitong.schoolbusinfoupload.activity.LoginActivity.JSO
  * Created by yinxu on 2018/3/30.
  */
 
-public class NurseTaskActivity extends AppCompatActivity implements View.OnClickListener {
+public class NurseTaskActivity extends BaseActivity implements View.OnClickListener {
     static String tag="NurseTaskActivity";
     ProgressDialog progressDialog;
     Handler handler=new Handler();
@@ -85,6 +85,7 @@ public class NurseTaskActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.student_submit:
+                progressDialog.show();
                 uploadInfo();
                 break;
 
@@ -94,17 +95,13 @@ public class NurseTaskActivity extends AppCompatActivity implements View.OnClick
 
     }
     ArrayList<Student> getStudentInfoFromDb(){
-        String  sqls="insert into student (name,phone) values('yinxu','156153165')";
-
         ArrayList<Student> arrayLis=new ArrayList<>();
         Student student;
         DatabaseUtil databaseUtil=new DatabaseUtil(this,null,1);
         SQLiteDatabase sqLiteDatabase=databaseUtil.getWritableDatabase();
         Log.d(tag,sqLiteDatabase.getPath());
-        sqLiteDatabase.execSQL(sqls);
         Cursor cursor = sqLiteDatabase.query("student", new String[] { "name",
                 "phone" },null, null, null, null, null);
-
         while (cursor.moveToNext()){
             String name=cursor.getString(cursor.getColumnIndex("name"));
             String phone= cursor.getString(cursor.getColumnIndex("phone"));
@@ -120,6 +117,7 @@ public class NurseTaskActivity extends AppCompatActivity implements View.OnClick
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 JSONArray jsonArray=new JSONArray();
                 Integer busId=sharedPreferences.getInt("busId",0);
                 String busNumber=sharedPreferences.getString("busNumber","");
@@ -158,7 +156,7 @@ public class NurseTaskActivity extends AppCompatActivity implements View.OnClick
 
                 }
 
-                final String url="http://192.168.1.2/admin/info/status/info/upload";
+                final String url=AndroidUtil.host+"/admin/info/status/info/upload";
                 RequestBody requestBody = RequestBody.create(JSON, jsonArray.toJSONString());
 
                 final Request request = new Request.Builder().post(requestBody)
@@ -171,6 +169,7 @@ public class NurseTaskActivity extends AppCompatActivity implements View.OnClick
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                progressDialog.dismiss();
                                 Toast.makeText(getApplicationContext(),"提交失败",Toast.LENGTH_LONG).show();
                             }
                         });
@@ -182,6 +181,7 @@ public class NurseTaskActivity extends AppCompatActivity implements View.OnClick
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                progressDialog.dismiss();
                                 AlertDialog.Builder alertDialog=new AlertDialog.Builder(NurseTaskActivity.this);
                                 alertDialog.setMessage("提交成功，返回首页");
                                 alertDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -201,12 +201,6 @@ public class NurseTaskActivity extends AppCompatActivity implements View.OnClick
                 });
             }
         }).start();
-
-
-
-
-
-
 
     }
 }

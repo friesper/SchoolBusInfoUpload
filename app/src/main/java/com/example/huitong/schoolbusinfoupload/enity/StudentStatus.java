@@ -114,4 +114,22 @@ public class StudentStatus  {
     public void setTimeQuantum(Integer timeQuantum) {
         this.timeQuantum = timeQuantum;
     }
+
+    @Override
+    public String toString() {
+        return "StudentStatus{" +
+                "id=" + id +
+                ", busId=" + busId +
+                ", driverId=" + driverId +
+                ", nurseId=" + nurseId +
+                ", nurseName='" + nurseName + '\'' +
+                ", driverName='" + driverName + '\'' +
+                ", takeTime=" + takeTime +
+                ", studentName='" + studentName + '\'' +
+                ", studentPhone='" + studentPhone + '\'' +
+                ", timeQuantum=" + timeQuantum +
+                ", busNumber='" + busNumber + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

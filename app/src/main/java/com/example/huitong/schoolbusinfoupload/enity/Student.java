@@ -5,9 +5,18 @@ package com.example.huitong.schoolbusinfoupload.enity;
  */
 
 public class Student {
+    private Integer id;
     private String name;
     private String phone;
     private boolean status=false;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public boolean getStatus() {
         return status;

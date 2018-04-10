@@ -49,7 +49,7 @@ import static com.example.huitong.schoolbusinfoupload.util.AndroidUtil.SPFILENAM
  * Created by yinxu on 2018/3/27.
  */
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
     public static String SPFILENAME="userInfo";
     ProgressDialog progressDialog;
     public  static  OkHttpClient mOkHttpClient;
@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText  username=(EditText)findViewById(R.id.username);
         final EditText password=(EditText)findViewById(R.id.password);
         Button login=(Button)findViewById(R.id.login);
-        final String url="http://192.168.1.2/mobile/login";
+        final String url=AndroidUtil.host+"/mobile/login";
         final User user=new User();
         user.setUserName(username.getText().toString());
         user.setPassWord(password.getText().toString());
@@ -86,16 +86,27 @@ public class LoginActivity extends AppCompatActivity {
                 loginss(username, password, url, user);
             }
         });
+        SharedPreferences sharedPreferences=getSharedPreferences(SPFILENAME,MODE_PRIVATE);
+        String username_=sharedPreferences.getString("userName","");
+        String password_=sharedPreferences.getString("userPassword","");
+        Log.d(tags,"username+"+username_);
+        Log.d(tags,"password+"+password_);
+        if (!username_.equals("")&&!password_.equals("")){
+            username.setText(username_);
+            password.setText(password_);
+            loginss(username, password, url, user);
+        }
 
     }
 
-    private void loginss(EditText username, final EditText password, String url, User user) {
+    private void loginss(final EditText username, final EditText password, String url, final User user) {
         if (TextUtils.isEmpty(username.getText()) || TextUtils.isEmpty(password.getText())) {
             Toast.makeText(LoginActivity.this,"账号和密码不能为空",Toast.LENGTH_LONG).show();
         } else {
+            progressDialog.show();
             user.setUserName(username.getText().toString());
             user.setPassWord(password.getText().toString());
-            Log.d("LoginActivity",com.alibaba.fastjson.JSON.toJSONString(user));
+            Log.d(tags,com.alibaba.fastjson.JSON.toJSONString(user));
             RequestBody requestBody=RequestBody.create(JSON, com.alibaba.fastjson.JSON.toJSONString(user));
          mOkHttpClient=new OkHttpClient.Builder()
                 .cookieJar(new CookieJar() {
@@ -103,16 +114,16 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
                         cookieStore.put(url, cookies);
-                        cookieStore.put(HttpUrl.parse("http://192.168.1.2/mobile/login"), cookies);
+                        cookieStore.put(HttpUrl.parse(AndroidUtil.host+"/mobile/login"), cookies);
                         for(Cookie cookie:cookies){
-                            System.out.println("cookie Name:"+cookie.name());
-                            System.out.println("cookie Path:"+cookie.path());
+                            Log.d(tags,"cookie Name:"+cookie.name());
+                            Log.d(tags,"cookie Path:"+cookie.path());
                         }
                     }
 
                     @Override
                     public List<Cookie> loadForRequest(HttpUrl url) {
-                        List<Cookie> cookies = cookieStore.get(HttpUrl.parse("http://192.168.1.2/mobile/login"));
+                        List<Cookie> cookies = cookieStore.get(HttpUrl.parse(AndroidUtil.host+"/mobile/login"));
                         if(cookies==null){
                             System.out.println("没加载到cookie");
                         }
@@ -133,6 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(),"网络异常",Toast.LENGTH_LONG).show();
                         }
                     });
             }
@@ -150,11 +162,14 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (response.code() == 200) {
                     final String str = response.body().string();
                     Log.d(tags, str);
+                    Log.d(tags,"username"+user.getUserName()+"password"+user.getPassWord());
+                    AndroidUtil.saveInfo(getSharedPreferences(SPFILENAME,MODE_PRIVATE),"userName",user.getUserName());
+                    AndroidUtil.saveInfo(getSharedPreferences(SPFILENAME,MODE_PRIVATE),"userPassword",user.getPassWord());
 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), "请求成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "登陆成功", Toast.LENGTH_SHORT).show();
                             progressDialog.dismiss();
                             Intent intent = new Intent();
                             if (str.contains("driver")) {

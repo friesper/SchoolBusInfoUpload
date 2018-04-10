@@ -9,7 +9,7 @@ import com.example.huitong.schoolbusinfoupload.R;
  * Created by yinxu on 2018/3/28.
  */
 
-public class DriverActivity extends Activity {
+public class DriverActivity extends BaseActivity {
 
 
     @Override

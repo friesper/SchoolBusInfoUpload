@@ -9,11 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_height="match_parent">
+            android:layout_height="0dp">
             <ImageView
                 android:layout_gravity="center"
                 android:src="@drawable/icon"
@@ -22,9 +22,9 @@
         </LinearLayout>
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_weight="0.5"
+            android:layout_weight="4"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -68,13 +68,13 @@
 
         </LinearLayout>
         <LinearLayout
-            android:layout_weight="0.7"
+            android:layout_weight="1"
+            android:layout_gravity="center"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp">
             <Button
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="20dp"
                 android:id="@+id/login"
                 android:text="登陆"
                 android:background="@color/colorPrimary"

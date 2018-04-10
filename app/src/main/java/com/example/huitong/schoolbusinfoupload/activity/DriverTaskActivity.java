@@ -55,7 +55,7 @@ import okhttp3.Response;
  * Created by yinxu on 2018/3/29.
  */
 
-public class DriverTaskActivity extends AppCompatActivity implements View.OnClickListener {
+public class DriverTaskActivity extends BaseActivity implements View.OnClickListener {
     public static String tag="DriverTaskActivity";
     public static final MediaType JSON=MediaType.parse("application/json; charset=utf-8");
     SharedPreferences sharedPreferences;
@@ -99,6 +99,7 @@ public class DriverTaskActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.submitTask:
+                progressDialog.show();
                 upLoadInfo();
                 break;
             default:
@@ -114,7 +115,7 @@ public class DriverTaskActivity extends AppCompatActivity implements View.OnClic
         Log.d(tag, cookie);
         RequestBody requestBody = RequestBody.create(JSON, com.alibaba.fastjson.JSON.toJSONString(busInfo));
         Log.d(tag, com.alibaba.fastjson.JSON.toJSONString(busInfo));
-        String url = "http://192.168.1.2/admin/info/bus/info/upload";
+        String url = AndroidUtil.host+"/admin/info/bus/info/upload";
         final Request request = new Request.Builder().post(requestBody)
                 .url(url)
                 .build();
@@ -125,7 +126,8 @@ public class DriverTaskActivity extends AppCompatActivity implements View.OnClic
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "请求shibai", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "提交失败", Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -140,6 +142,7 @@ public class DriverTaskActivity extends AppCompatActivity implements View.OnClic
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        progressDialog.dismiss();
                         AlertDialog.Builder alertDialog=new AlertDialog.Builder(DriverTaskActivity.this);
                         alertDialog.setMessage("提交成功，返回首页");
                         alertDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -166,8 +169,6 @@ public class DriverTaskActivity extends AppCompatActivity implements View.OnClic
     }
     private BusInfo setInfo(ArrayList arrayList) {
 
-        String userinfo=AndroidUtil.getUserInfo(sharedPreferences);
-        Driver driver=  com.alibaba.fastjson.JSON.parseObject(userinfo, new TypeReference<Driver>() {});
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
@@ -196,12 +197,10 @@ public class DriverTaskActivity extends AppCompatActivity implements View.OnClic
         busInfo.setSafetyHammer((String)arrayList.get(7));
         busInfo.setSteeringWheel((String)arrayList.get(17));
         busInfo.setTirePressureScrews((String)arrayList.get(12));
-        busInfo.setBusId(driver.getBusId());
-        busInfo.setBusNumber(driver.getBusNumber());
-        busInfo.setDriverName(driver.getName());
+        busInfo.setBusId(sharedPreferences.getInt("busId",0));
+        busInfo.setBusNumber(sharedPreferences.getString("busNumber",""));
+        busInfo.setDriverName(sharedPreferences.getString("name",""));
         Log.d(tag,busInfo.toString());
-        Log.d(tag,userinfo);
-        Log.d(tag,driver.toString());
         return busInfo;
     }
 }

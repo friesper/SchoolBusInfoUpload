@@ -37,12 +37,14 @@ public class DriverFragment extends Fragment implements View.OnClickListener {
 
 
     public static String  driverFragmentTag="DriverFragment";
-    final String url="http://192.168.1.2/admin/school/schoolList";
+    final String url=AndroidUtil.host+"/admin/school/schoolList";
     String userType;
     Handler handler=new Handler();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+
         View view=inflater.inflate(R.layout.layout_driver,container,false);
+
         ImageButton button=(ImageButton)view.findViewById(R.id.startTask);
          userType=getActivity().getIntent().getStringExtra("userType");
         Intent intent=new Intent();

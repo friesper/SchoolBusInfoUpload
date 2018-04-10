@@ -2,6 +2,7 @@ package com.example.huitong.schoolbusinfoupload.activity;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenu;
@@ -20,8 +21,14 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.huitong.schoolbusinfoupload.R;
+import com.example.huitong.schoolbusinfoupload.adapter.showStudentNameAdapter;
+import com.example.huitong.schoolbusinfoupload.fragment.DashboardFragment;
 import com.example.huitong.schoolbusinfoupload.fragment.DriverFragment;
+import com.example.huitong.schoolbusinfoupload.fragment.DriverInfoFragment;
+import com.example.huitong.schoolbusinfoupload.fragment.InfoFragment;
+import com.example.huitong.schoolbusinfoupload.fragment.ViewDialogFragment;
 import com.example.huitong.schoolbusinfoupload.util.AndroidUtil;
+import com.example.huitong.schoolbusinfoupload.util.DatabaseUtil;
 
 import java.io.IOException;
 
@@ -34,7 +41,7 @@ import okhttp3.Response;
  * Created by yinxu on 2018/3/28.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private BottomNavigationView navigation;
     static String  tag="MainActivity";
     private Fragment fragment1;
@@ -44,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private int lastShowFragment = 0;
     String userType,userInfo;
     ProgressDialog progressDialog;
+    private long exitTime = 0;
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -76,11 +84,21 @@ public class MainActivity extends AppCompatActivity {
             data=data.replace('=',':');
             jsonObject=JSONObject.parseObject(data);
             Integer id= (Integer) jsonObject.get("id");
-            String name= jsonObject.get("name").toString();
+             String name=jsonObject.get("name").toString();
+            String phone=(String)jsonObject.get("phone").toString();
+            Integer busId=(Integer)jsonObject.get("busId");
+            String busNumber=jsonObject.get("busNumber").toString();
+             SharedPreferences sharedPreferences=getSharedPreferences(AndroidUtil.SPFILENAME,MODE_PRIVATE);
+            AndroidUtil.saveInfo(sharedPreferences,"id",id);
+            AndroidUtil.saveInfo(sharedPreferences,"busId",busId);
+            AndroidUtil.saveInfo(sharedPreferences,"busNumber",busNumber);
+            AndroidUtil.saveInfo(sharedPreferences,"name",name);
+            AndroidUtil.saveInfo(sharedPreferences,"phone",phone);
             progressDialog.dismiss();
 
         }
         else if (userType.equals("nurse")){
+            Log.d("MainActivity",userInfo);
             JSONObject jsonObject = JSONObject.parseObject(userInfo);
             String  data =  jsonObject.get("data").toString();
             data=data.substring(data.indexOf('{'));
@@ -88,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
             jsonObject=JSONObject.parseObject(data);
             Integer id= (Integer) jsonObject.get("id");
             final String name=jsonObject.get("name").toString();
-            String phone=(String)jsonObject.get("phone");
+            String phone=(String)jsonObject.get("phone").toString();
             final SharedPreferences sharedPreferences=getSharedPreferences(AndroidUtil.SPFILENAME,MODE_PRIVATE);
-            AndroidUtil.saveInfo(sharedPreferences,"nurseId",id);
-            AndroidUtil.saveInfo(sharedPreferences,"nurseName",name);
-            AndroidUtil.saveInfo(sharedPreferences,"nursePhone",phone);
-            String url="http://192.168.1.2/admin/nurse/mobile/relationInfo/"+id;
+            AndroidUtil.saveInfo(sharedPreferences,"id",id);
+            AndroidUtil.saveInfo(sharedPreferences,"name",name);
+            AndroidUtil.saveInfo(sharedPreferences,"phone",phone);
+            String url=AndroidUtil.host+"/admin/nurse/mobile/relationInfo/"+id;
             Log.d("MainActivity","id"+Integer.toString(id));
             final Request request = new Request.Builder()
                     .url(url)
@@ -118,26 +136,41 @@ public class MainActivity extends AppCompatActivity {
                     final String str = response.body().string();
                     JSONObject jsonObject1=JSONObject.parseObject(str);
                     String data=jsonObject1.getString("data");
-                    if (!data.equals("")) {
+                    if (data!=null&&!data.equals("")) {
                         Log.d(tag,"data++"+data);
                         JSONArray jsonArray=JSONArray.parseArray(data);
+                        if (jsonArray.size()>0){
                         String content1= jsonArray.get(0).toString();
-                        if (!content1.equals("")){
-                            JSONObject jsonObject2=JSONObject.parseObject(content1);
-                            Integer busId=(Integer)jsonObject2.get("id");
-                            String number=(String)jsonObject2.get("number");
-                            AndroidUtil.saveInfo(sharedPreferences,"busId",busId);
-                            AndroidUtil.saveInfo(sharedPreferences,"busNumber",number);
+                        try {
+                            if (!content1.equals("")) {
+                                JSONObject jsonObject2 = JSONObject.parseObject(content1);
+                                Integer busId = (Integer) jsonObject2.get("busId");
+                                String number = (String) jsonObject2.get("busNumber");
+                                String name = (String) jsonObject2.get("name");
+                                Integer driverId = (Integer) jsonObject2.get("id");
+                                AndroidUtil.saveInfo(sharedPreferences, "driverId", driverId);
+                                AndroidUtil.saveInfo(sharedPreferences, "busId", busId);
+                                AndroidUtil.saveInfo(sharedPreferences, "driverName", name);
+                                AndroidUtil.saveInfo(sharedPreferences, "busNumber", number);
+                            }
                         }
-                        String content2=  jsonArray.get(1).toString();
-
-                        if (!content2.equals("")){
-                            JSONObject jsonObject2=JSONObject.parseObject(content1);
-                            Integer busId=(Integer)jsonObject2.get("id");
-                            String name=(String)jsonObject2.get("name");
-                            AndroidUtil.saveInfo(sharedPreferences,"driverId",busId);
-                            AndroidUtil.saveInfo(sharedPreferences,"driverName",name);
+                        catch (Exception e){
+                            e.printStackTrace();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MainActivity.this,"请联系管理员完善个人信息",Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
+                    }
+                    }else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MainActivity.this,"请管理员在后台绑定车辆信息",Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
                     runOnUiThread(new Runnable() {
                         @Override
@@ -163,8 +196,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void initFragments() {
         fragment1 = new DriverFragment();
-        fragment2 = new Fragment();
-        fragment3 = new Fragment();
+        if (userType.equals("driver")){
+            fragment2 = new DriverInfoFragment();
+        }else {
+            fragment2 = new DashboardFragment();
+        }fragment3 = new InfoFragment();
         fragments = new Fragment[]{fragment1, fragment2, fragment3};
         lastShowFragment = 0;
         getSupportFragmentManager()
@@ -180,18 +216,25 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     if (lastShowFragment != 0) {
+                        setTitle("主页");
                         switchFragment(lastShowFragment, 0);
                         lastShowFragment = 0;
                     }
                     return true;
                 case R.id.navigation_dashboard:
                     if (lastShowFragment != 1) {
+                        if (userType.equals("driver")) {
+                            setTitle("当日学生接送信息");
+                        }else {
+                            setTitle("接送学生名单");
+                        }
                         switchFragment(lastShowFragment, 1);
                         lastShowFragment = 1;
                     }
                     return true;
                 case R.id.navigation_notifications:
                     if (lastShowFragment != 2) {
+                       setTitle("个人信息");
                         switchFragment(lastShowFragment, 2);
                         lastShowFragment = 2;
                     }
@@ -201,8 +244,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+    @Override
+    public void onBackPressed() {
+        exit();
+    }
 
-
-
+    public void exit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                    Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            BaseActivity.sendFinishActivityBroadcast(this);
+            finish();
+        }
+    }
 
 }
