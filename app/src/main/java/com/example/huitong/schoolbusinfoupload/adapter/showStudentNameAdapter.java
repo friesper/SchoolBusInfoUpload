@@ -27,10 +27,11 @@ import java.util.ArrayList;
 public class showStudentNameAdapter extends RecyclerView.Adapter<showStudentNameAdapter.showHolder> {
     private ArrayList<Student> arrayList;
     private Context context;
-
-    public showStudentNameAdapter(Context context, ArrayList<Student> arrayList){
+    private String name;
+    public showStudentNameAdapter(Context context, ArrayList<Student> arrayList,String name){
     this.context=context;
     this.arrayList=arrayList;
+    this.name=name;
     }
     public void  setArrayList(ArrayList<Student> arrayList){
         this.arrayList=arrayList;
@@ -66,7 +67,7 @@ public class showStudentNameAdapter extends RecyclerView.Adapter<showStudentName
              showname=itemView.findViewById(R.id.showname);
              showphone=itemView.findViewById(R.id.showphone);
              delete=itemView.findViewById(R.id.deletesutdnetinfo);
-            databaseUtil=new DatabaseUtil(context,null,1);
+            databaseUtil=new DatabaseUtil(context,name,null,1);
             sqLiteDatabase=databaseUtil.getWritableDatabase();
              delete.setOnClickListener(this);
 
@@ -80,7 +81,6 @@ public class showStudentNameAdapter extends RecyclerView.Adapter<showStudentName
                     Log.d("adapter",arrayList.get(getLayoutPosition()).getId().toString());
                     sqLiteDatabase.delete("student","id=?",new String[]{arrayList.get(getLayoutPosition()).getId().toString()});
                     arrayList.remove(getLayoutPosition());
-                    sqLiteDatabase.close();
                     notifyDataSetChanged();
                     Toast.makeText(context,"删除成功",Toast.LENGTH_LONG).show();
                     break;

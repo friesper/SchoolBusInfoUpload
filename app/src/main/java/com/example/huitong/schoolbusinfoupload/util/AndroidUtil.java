@@ -36,7 +36,7 @@ import static com.example.huitong.schoolbusinfoupload.activity.LoginActivity.JSO
 
 public class AndroidUtil {
     public static final String host="http://123.207.53.122";
-    public static final  String   SPFILENAME ="USERINFO";
+    public static final  String   SPFILENAME ="userInfo";
     public static boolean saveSession(SharedPreferences sharedPreferences, Map<String,String> map){
         SharedPreferences.Editor editor=sharedPreferences.edit();
         Iterator iterator=map.keySet().iterator();

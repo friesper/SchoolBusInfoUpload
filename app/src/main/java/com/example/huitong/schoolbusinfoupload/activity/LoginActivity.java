@@ -21,6 +21,7 @@ import com.example.huitong.schoolbusinfoupload.R;
 import com.example.huitong.schoolbusinfoupload.enity.Driver;
 import com.example.huitong.schoolbusinfoupload.enity.User;
 import com.example.huitong.schoolbusinfoupload.util.AndroidUtil;
+import com.example.huitong.schoolbusinfoupload.util.JumpTextWatcher;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class LoginActivity extends BaseActivity {
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        final OkHttpClient httpClient= new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)    .readTimeout(5,TimeUnit.SECONDS).build();
+        SharedPreferences sharedPreferences=getSharedPreferences(SPFILENAME,MODE_PRIVATE);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +87,6 @@ public class LoginActivity extends BaseActivity {
                 loginss(username, password, url, user);
             }
         });
-        SharedPreferences sharedPreferences=getSharedPreferences(SPFILENAME,MODE_PRIVATE);
         String username_=sharedPreferences.getString("userName","");
         String password_=sharedPreferences.getString("userPassword","");
         Log.d(tags,"username+"+username_);
@@ -96,6 +96,7 @@ public class LoginActivity extends BaseActivity {
             password.setText(password_);
             loginss(username, password, url, user);
         }
+
 
     }
 

@@ -51,6 +51,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.example.huitong.schoolbusinfoupload.util.AndroidUtil.SPFILENAME;
+
 /**
  * Created by yinxu on 2018/3/29.
  */
@@ -86,7 +88,7 @@ public class DriverTaskActivity extends BaseActivity implements View.OnClickList
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         Button button=findViewById(R.id.submitTask);
-        sharedPreferences=getSharedPreferences("USERINFO",MODE_PRIVATE);
+        sharedPreferences=getSharedPreferences(SPFILENAME,MODE_PRIVATE);
         button.setOnClickListener(this);
 
     }

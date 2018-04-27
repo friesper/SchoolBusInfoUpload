@@ -13,14 +13,13 @@ import android.database.sqlite.SQLiteQuery;
  */
 
 public class DatabaseUtil extends SQLiteOpenHelper {
-    public static String name="student";
-    public DatabaseUtil(Context context,  SQLiteDatabase.CursorFactory factory, int version) {
+    public DatabaseUtil(Context context, String name ,SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String sql="create table if not exists student(id integer primary key autoincrement ,name varchar(64), phone varchar(64))";
+        String sql="create table if not exists  student (id integer primary key autoincrement ,name varchar(64), phone varchar(64))";
         sqLiteDatabase.execSQL(sql);
 
     }

@@ -2,7 +2,7 @@ package com.example.huitong.schoolbusinfoupload.enity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class StudentStatus  {
     private Integer id;

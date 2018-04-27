@@ -46,6 +46,7 @@ import static com.example.huitong.schoolbusinfoupload.activity.LoginActivity.JSO
  */
 
 public class NurseTaskActivity extends BaseActivity implements View.OnClickListener {
+    public static String SPFILENAME="userInfo";
     static String tag="NurseTaskActivity";
     ProgressDialog progressDialog;
     Handler handler=new Handler();
@@ -54,10 +55,13 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
     StudentInfoAdapter studentInfoAdapter;
     ArrayList<Student> studens;
     SharedPreferences sharedPreferences;
+    String username;
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_nurse);
+        sharedPreferences=getSharedPreferences(SPFILENAME,MODE_PRIVATE);
+        username=sharedPreferences.getString("userName","");
         layoutManager = new LinearLayoutManager(this );
         studens=getStudentInfoFromDb();
         studentInfoAdapter =new StudentInfoAdapter(this,studens);
@@ -71,7 +75,7 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        sharedPreferences=getSharedPreferences(AndroidUtil.SPFILENAME,MODE_PRIVATE);
+
         Button button=findViewById(R.id.student_submit);
         button.setOnClickListener(this);
 
@@ -97,7 +101,7 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
     ArrayList<Student> getStudentInfoFromDb(){
         ArrayList<Student> arrayLis=new ArrayList<>();
         Student student;
-        DatabaseUtil databaseUtil=new DatabaseUtil(this,null,1);
+        DatabaseUtil databaseUtil=new DatabaseUtil(this,username,null,1);
         SQLiteDatabase sqLiteDatabase=databaseUtil.getWritableDatabase();
         Log.d(tag,sqLiteDatabase.getPath());
         Cursor cursor = sqLiteDatabase.query("student", new String[] { "name",
@@ -131,6 +135,7 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
 
                 int hour = mCalendar.get(Calendar.HOUR);
                 Date date=mCalendar.getTime();
+                java.sql.Date  date1=new java.sql.Date(mCalendar.getTime().getTime());
                 int apm = mCalendar.get(Calendar.AM_PM);
 
                 StudentStatus studentStatus;
@@ -144,7 +149,7 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
                     studentStatus.setDriverName(DriverName);
                     studentStatus.setNurseId(nurseId);
                     studentStatus.setNurseName(nurseName);
-                    studentStatus.setTakeTime(date);
+                    studentStatus.setTakeTime(date1);
                     studentStatus.setTimeQuantum(apm);
                     if (studens.get(i).getStatus()){
                         studentStatus.setStatus(1);
