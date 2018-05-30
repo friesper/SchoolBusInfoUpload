@@ -18,6 +18,7 @@ import com.example.huitong.schoolbusinfoupload.fragment.DriverFragment;
 import com.example.huitong.schoolbusinfoupload.fragment.DriverInfoFragment;
 import com.example.huitong.schoolbusinfoupload.fragment.InfoFragment;
 import com.example.huitong.schoolbusinfoupload.fragment.NurseStudentList;
+import com.example.huitong.schoolbusinfoupload.fragment.nurseInfoFragment;
 import com.example.huitong.schoolbusinfoupload.util.AndroidUtil;
 
 import java.io.IOException;
@@ -189,7 +190,7 @@ public class MainActivity extends BaseActivity {
         if (userType.equals("driver")){
             fragment2 = new DriverInfoFragment();
         }else {
-            fragment2 = new NurseStudentList();
+            fragment2 = new nurseInfoFragment();
         }fragment3 = new InfoFragment();
         fragments = new Fragment[]{fragment1, fragment2, fragment3};
         lastShowFragment = 0;
