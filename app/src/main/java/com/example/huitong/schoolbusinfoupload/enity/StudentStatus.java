@@ -18,6 +18,15 @@ public class StudentStatus  {
     private Integer timeQuantum;
     private String busNumber;
     private Integer status;
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public Integer getStatus() {
         return status;

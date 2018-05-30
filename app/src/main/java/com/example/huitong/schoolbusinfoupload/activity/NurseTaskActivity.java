@@ -105,14 +105,17 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
         SQLiteDatabase sqLiteDatabase=databaseUtil.getWritableDatabase();
         Log.d(tag,sqLiteDatabase.getPath());
         Cursor cursor = sqLiteDatabase.query("student", new String[] { "name",
-                "phone" },null, null, null, null, null);
+                "phone" ,"address"},null, null, null, null, null);
         while (cursor.moveToNext()){
             String name=cursor.getString(cursor.getColumnIndex("name"));
             String phone= cursor.getString(cursor.getColumnIndex("phone"));
+            String address=cursor.getString(cursor.getColumnIndex("address"));
             student=new Student();
             student.setName(name);
             student.setPhone(phone);
+            student.setAddress(address);
             arrayLis.add(student);
+
         }
         sqLiteDatabase.close();
         return arrayLis;
@@ -143,6 +146,7 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
                     studentStatus=new StudentStatus();
                     studentStatus.setStudentName(studens.get(i).getName());
                     studentStatus.setStudentPhone(studens.get(i).getPhone());
+                    studentStatus.setAddress(studens.get(i).getAddress());
                     studentStatus.setBusId(busId);
                     studentStatus.setBusNumber(busNumber);
                     studentStatus.setDriverId(drivreId);

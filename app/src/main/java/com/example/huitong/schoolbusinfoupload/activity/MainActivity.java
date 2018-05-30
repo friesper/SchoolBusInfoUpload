@@ -2,18 +2,11 @@ package com.example.huitong.schoolbusinfoupload.activity;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationMenu;
-import android.support.design.internal.NavigationMenu;
-import android.support.design.internal.NavigationMenuItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -21,14 +14,11 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.huitong.schoolbusinfoupload.R;
-import com.example.huitong.schoolbusinfoupload.adapter.showStudentNameAdapter;
-import com.example.huitong.schoolbusinfoupload.fragment.DashboardFragment;
 import com.example.huitong.schoolbusinfoupload.fragment.DriverFragment;
 import com.example.huitong.schoolbusinfoupload.fragment.DriverInfoFragment;
 import com.example.huitong.schoolbusinfoupload.fragment.InfoFragment;
-import com.example.huitong.schoolbusinfoupload.fragment.ViewDialogFragment;
+import com.example.huitong.schoolbusinfoupload.fragment.NurseStudentList;
 import com.example.huitong.schoolbusinfoupload.util.AndroidUtil;
-import com.example.huitong.schoolbusinfoupload.util.DatabaseUtil;
 
 import java.io.IOException;
 
@@ -199,7 +189,7 @@ public class MainActivity extends BaseActivity {
         if (userType.equals("driver")){
             fragment2 = new DriverInfoFragment();
         }else {
-            fragment2 = new DashboardFragment();
+            fragment2 = new NurseStudentList();
         }fragment3 = new InfoFragment();
         fragments = new Fragment[]{fragment1, fragment2, fragment3};
         lastShowFragment = 0;

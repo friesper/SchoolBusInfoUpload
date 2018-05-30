@@ -50,7 +50,7 @@ public class StudentInfoAdapter extends RecyclerView.Adapter<StudentInfoAdapter.
         holder.sudent_name.setText(student.get(position).getName());
         holder.student_phone.setText(student.get(position).getPhone());
         holder.studnet_status.setChecked(student.get(position).getStatus());
-
+        holder.student_address.setText(student.get(position).getAddress());
     }
 
     @Override
@@ -60,11 +60,12 @@ public class StudentInfoAdapter extends RecyclerView.Adapter<StudentInfoAdapter.
 
     public class StuInfoHolder extends RecyclerView.ViewHolder {
         private TextView sudent_name;
-        private TextView student_phone;
+        private TextView student_phone,student_address;
         private CheckBox studnet_status;
 
         public StuInfoHolder(View itemView) {
             super(itemView);
+            student_address=itemView.findViewById(R.id.student_item_address);
             student_phone=itemView.findViewById(R.id.student_item_phone);
             sudent_name=itemView.findViewById(R.id.student_item_name);
             studnet_status=itemView.findViewById(R.id.student_item_status);

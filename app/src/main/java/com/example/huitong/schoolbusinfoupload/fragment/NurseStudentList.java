@@ -2,7 +2,6 @@ package com.example.huitong.schoolbusinfoupload.fragment;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,7 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -21,24 +19,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONObject;
 import com.example.huitong.schoolbusinfoupload.R;
-import com.example.huitong.schoolbusinfoupload.activity.MainActivity;
 import com.example.huitong.schoolbusinfoupload.adapter.showStudentNameAdapter;
 import com.example.huitong.schoolbusinfoupload.enity.Student;
-import com.example.huitong.schoolbusinfoupload.util.AndroidUtil;
 import com.example.huitong.schoolbusinfoupload.util.DatabaseUtil;
 
 import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.example.huitong.schoolbusinfoupload.util.AndroidUtil.SPFILENAME;
 
 /**
  * Created by yinxu on 2018/4/4.
  */
 
-public class DashboardFragment extends Fragment implements View.OnClickListener  {
+public class NurseStudentList extends Fragment implements View.OnClickListener  {
     public static String SPFILENAME="userInfo";
     static String tag="DashboardFragment";
     protected static final int REUEST_CODDE = 0;
@@ -50,7 +44,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     LinearLayoutManager layoutManager;
     SharedPreferences sharedPreferences;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.dash_board_fragment,container,false);
+        View view=inflater.inflate(R.layout.student_list,container,false);
         recyclerView=view.findViewById(R.id.studentLists);
         username=sharedPreferences.getString("userName","");
         if (sharedPreferences!=null) {
@@ -120,7 +114,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         if (resultCode==0) {
             String name=data.getStringExtra("name");
             String phone=data.getStringExtra("phone");
-            String sql="insert into   student (name,phone) values('"+name+"','"+phone+"')";
+            String address=data.getStringExtra("address");
+            String sql="insert into   student (name,phone,address) values('"+name+"','"+phone+"','"+address+"')";
             DatabaseUtil databaseUtil=new DatabaseUtil(getContext(),username,null,1);
             SQLiteDatabase sqLiteDatabase=databaseUtil.getWritableDatabase();
             sqLiteDatabase.execSQL(sql);

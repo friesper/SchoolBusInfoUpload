@@ -34,11 +34,13 @@ public class ViewDialogFragment extends DialogFragment {
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                            EditText et_userName = (EditText) view.findViewById(R.id.addname);
-                            EditText et_password = (EditText) view.findViewById(R.id.addphone);
-                            Intent intent=new Intent();
-                            intent.putExtra("name",et_userName.getText().toString());
-                            intent.putExtra("phone",et_password.getText().toString());
+                        EditText name = (EditText) view.findViewById(R.id.addname);
+                        EditText phone = (EditText) view.findViewById(R.id.addphone);
+                        EditText address = (EditText) view.findViewById(R.id.addphone);
+                        Intent intent=new Intent();
+                        intent.putExtra("name",name.getText().toString());
+                        intent.putExtra("phone",phone.getText().toString());
+                        intent.putExtra("address",address.getText().toString());
                         Fragment targetFragment = getTargetFragment(); // fragment1 in our case
                         if (targetFragment != null) {
                             targetFragment.onActivityResult(1, 0, intent);
