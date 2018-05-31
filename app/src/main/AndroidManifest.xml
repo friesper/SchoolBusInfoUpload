@@ -25,7 +25,9 @@
         <activity android:name=".activity.NurseTaskActivity">
 
         </activity>
+        <activity android:name=".fragment.NurseStudentList">
 
+        </activity>
     </application>
 
 

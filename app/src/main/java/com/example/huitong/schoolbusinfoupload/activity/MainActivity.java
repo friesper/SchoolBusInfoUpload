@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.huitong.schoolbusinfoupload.R;
+import com.example.huitong.schoolbusinfoupload.fragment.BusInfoFragment;
 import com.example.huitong.schoolbusinfoupload.fragment.DriverFragment;
 import com.example.huitong.schoolbusinfoupload.fragment.DriverInfoFragment;
 import com.example.huitong.schoolbusinfoupload.fragment.InfoFragment;
@@ -188,7 +189,7 @@ public class MainActivity extends BaseActivity {
     private void initFragments() {
         fragment1 = new DriverFragment();
         if (userType.equals("driver")){
-            fragment2 = new DriverInfoFragment();
+            fragment2 = new BusInfoFragment();
         }else {
             fragment2 = new nurseInfoFragment();
         }fragment3 = new InfoFragment();
@@ -215,9 +216,9 @@ public class MainActivity extends BaseActivity {
                 case R.id.navigation_dashboard:
                     if (lastShowFragment != 1) {
                         if (userType.equals("driver")) {
-                            setTitle("当日学生接送信息");
+                            setTitle("学生接送信息");
                         }else {
-                            setTitle("接送学生名单");
+                            setTitle("学生接送信息");
                         }
                         switchFragment(lastShowFragment, 1);
                         lastShowFragment = 1;

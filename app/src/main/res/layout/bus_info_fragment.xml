@@ -13,25 +13,7 @@
             android:gravity="center"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:text="姓名"
-            android:layout_height="match_parent" />
-        <TextView
-            android:gravity="center"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="电话"
-            android:layout_height="match_parent" />
-        <TextView
-            android:gravity="center"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="时间"
-            android:layout_height="match_parent" />
-        <TextView
-            android:gravity="center"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="状态"
+            android:text="汽车状态"
             android:layout_height="match_parent" />
     </LinearLayout>
     <LinearLayout
@@ -39,8 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp">
 
+
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/nurse_student_info_list"
+        android:id="@+id/bus_info_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -71,24 +54,6 @@
             android:layout_width="wrap_content"
             android:text="今天数据"
             android:layout_height="match_parent" />
-      <LinearLayout
-          android:gravity="center"
-          android:orientation="vertical"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content">
-          <ImageButton
-              android:id="@+id/student_list"
-              android:background="@drawable/ic_assignment_ind_ds_24dp"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content" />
-          <TextView
-              android:text="学生名单"
-              android:textSize="10dp"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content" />
-      </LinearLayout>
-
     </LinearLayout>
-
 
 </LinearLayout>

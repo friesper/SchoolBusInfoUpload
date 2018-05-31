@@ -105,15 +105,17 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
         SQLiteDatabase sqLiteDatabase=databaseUtil.getWritableDatabase();
         Log.d(tag,sqLiteDatabase.getPath());
         Cursor cursor = sqLiteDatabase.query("student", new String[] { "name",
-                "phone" ,"address"},null, null, null, null, null);
+                "phone" ,"address","distance"},null, null, null, null, null);
         while (cursor.moveToNext()){
             String name=cursor.getString(cursor.getColumnIndex("name"));
             String phone= cursor.getString(cursor.getColumnIndex("phone"));
             String address=cursor.getString(cursor.getColumnIndex("address"));
+            String distance=cursor.getString(cursor.getColumnIndex("distance"));
             student=new Student();
             student.setName(name);
             student.setPhone(phone);
             student.setAddress(address);
+            student.setDistance(distance);
             arrayLis.add(student);
 
         }
@@ -147,6 +149,7 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
                     studentStatus.setStudentName(studens.get(i).getName());
                     studentStatus.setStudentPhone(studens.get(i).getPhone());
                     studentStatus.setAddress(studens.get(i).getAddress());
+                    studentStatus.setDistance(studens.get(i).getDistance());
                     studentStatus.setBusId(busId);
                     studentStatus.setBusNumber(busNumber);
                     studentStatus.setDriverId(drivreId);
@@ -167,7 +170,7 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
 
                 final String url=AndroidUtil.host+"/admin/info/status/info/upload";
                 RequestBody requestBody = RequestBody.create(JSON, jsonArray.toJSONString());
-
+                Log.d(tag,jsonArray.toJSONString());
                 final Request request = new Request.Builder().post(requestBody)
                         .url(url)
                         .build();

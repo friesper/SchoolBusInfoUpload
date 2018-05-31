@@ -19,7 +19,7 @@ public class DatabaseUtil extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String sql="create table if not exists  student (id integer primary key autoincrement ,name varchar(64), phone varchar(64),address varchar(64))";
+        String sql="create table if not exists  student (id integer primary key autoincrement ,name varchar(64), phone varchar(64),address varchar(64),distance varchar(64))";
         sqLiteDatabase.execSQL(sql);
 
     }

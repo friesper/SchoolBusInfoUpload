@@ -10,6 +10,15 @@ public class Student {
     private String phone;
     private boolean status=false;
     private String address;
+    private String  distance;
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
 
     public String getAddress() {
         return address;
@@ -54,9 +63,12 @@ public class Student {
     @Override
     public String toString() {
         return "Student{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", status=" + status +
+                ", address='" + address + '\'' +
+                ", distance='" + distance + '\'' +
                 '}';
     }
 }

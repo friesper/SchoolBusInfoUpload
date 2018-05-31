@@ -1,22 +1,18 @@
 package com.example.huitong.schoolbusinfoupload.fragment;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.huitong.schoolbusinfoupload.R;
@@ -26,13 +22,11 @@ import com.example.huitong.schoolbusinfoupload.util.DatabaseUtil;
 
 import java.util.ArrayList;
 
-import static android.content.Context.MODE_PRIVATE;
-
 /**
  * Created by yinxu on 2018/4/4.
  */
 
-public class NurseStudentList extends Fragment implements View.OnClickListener  {
+public class NurseStudentList extends FragmentActivity implements View.OnClickListener ,ViewDialogFragment.NoticeDialogListener {
     public static String SPFILENAME="userInfo";
     static String tag="DashboardFragment";
     protected static final int REUEST_CODDE = 0;
@@ -43,43 +37,30 @@ public class NurseStudentList extends Fragment implements View.OnClickListener  
     String username;
     LinearLayoutManager layoutManager;
     SharedPreferences sharedPreferences;
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.student_list,container,false);
-        recyclerView=view.findViewById(R.id.studentLists);
+    public void onCreate( Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.student_list);
+        sharedPreferences=getSharedPreferences(SPFILENAME,MODE_PRIVATE);
+        recyclerView=findViewById(R.id.studentLists);
         username=sharedPreferences.getString("userName","");
         if (sharedPreferences!=null) {
             Log.d(tag, "username" + username);
         }
         arrayList=getStudentInfoFromDb();
-        floatingActionButton=view.findViewById(R.id.additem);
-        layoutManager = new LinearLayoutManager(getContext());
-        showStudentNameAdapters=new showStudentNameAdapter(getContext(),arrayList,username);
+        floatingActionButton=findViewById(R.id.additem);
+        layoutManager = new LinearLayoutManager(this);
+        showStudentNameAdapters=new showStudentNameAdapter(this,arrayList,username);
         recyclerView.setAdapter(showStudentNameAdapters);
         recyclerView.setLayoutManager(layoutManager);
         layoutManager.setOrientation(OrientationHelper. VERTICAL);
         floatingActionButton.setOnClickListener(this);
-        return view;
-    }
-    @TargetApi(23)
-    @Override
-    public void onAttach(Context context){
-        super.onAttach(context);
-        sharedPreferences=getActivity().getSharedPreferences(SPFILENAME,MODE_PRIVATE);
-
-    }
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        sharedPreferences=getActivity().getSharedPreferences(SPFILENAME,MODE_PRIVATE);
     }
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.additem:
                 ViewDialogFragment viewDialogFragment = new ViewDialogFragment();
-                viewDialogFragment.setTargetFragment(this,1);
-                viewDialogFragment.show(getFragmentManager());
+                viewDialogFragment.show(getSupportFragmentManager(),"loginDialog");
                 break;
 
             default:
@@ -90,19 +71,24 @@ public class NurseStudentList extends Fragment implements View.OnClickListener  
     ArrayList<Student> getStudentInfoFromDb(){
         ArrayList<Student> arrayLis=new ArrayList<>();
         Student student;
-        DatabaseUtil databaseUtil=new DatabaseUtil(getContext(),username ,null,1);
+        DatabaseUtil databaseUtil=new DatabaseUtil(this,username ,null,1);
         SQLiteDatabase sqLiteDatabase=databaseUtil.getWritableDatabase();
         Log.d(tag,sqLiteDatabase.getPath());
         Cursor cursor = sqLiteDatabase.query("student", new String[] { "id","name",
-                "phone" },null, null, null, null, null);
+                "phone","address","distance" },null, null, null, null, null);
         while (cursor.moveToNext()){
             Integer id=cursor.getInt(cursor.getColumnIndex("id"));
             String name=cursor.getString(cursor.getColumnIndex("name"));
             String phone= cursor.getString(cursor.getColumnIndex("phone"));
+            String address= cursor.getString(cursor.getColumnIndex("address"));
+            String distance= cursor.getString(cursor.getColumnIndex("distance"));
             student=new Student();
             student.setId(id);
             student.setName(name);
             student.setPhone(phone);
+            student.setAddress(address);
+            student.setDistance(distance);
+            Log.d(tag,student.toString());
             arrayLis.add(student);
         }
         sqLiteDatabase.close();
@@ -115,17 +101,41 @@ public class NurseStudentList extends Fragment implements View.OnClickListener  
             String name=data.getStringExtra("name");
             String phone=data.getStringExtra("phone");
             String address=data.getStringExtra("address");
-            String sql="insert into   student (name,phone,address) values('"+name+"','"+phone+"','"+address+"')";
-            DatabaseUtil databaseUtil=new DatabaseUtil(getContext(),username,null,1);
+            String distance=data.getStringExtra("distance");
+            String sql="insert into   student (name,phone,address,distance) values('"+name+"','"+phone+"','"+address+"','"+distance+"')";
+            DatabaseUtil databaseUtil=new DatabaseUtil(this,username,null,1);
             SQLiteDatabase sqLiteDatabase=databaseUtil.getWritableDatabase();
             sqLiteDatabase.execSQL(sql);
             sqLiteDatabase.close();
             arrayList=getStudentInfoFromDb();
             showStudentNameAdapters.setArrayList(arrayList);
             recyclerView.refreshDrawableState();
-            Toast.makeText(getContext(), "添加成功", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "添加成功", Toast.LENGTH_LONG).show();
         }
         }
+
+    @Override
+    public void onDialogPositiveClick(Intent data) {
+        String name=data.getStringExtra("name");
+        String phone=data.getStringExtra("phone");
+        String address=data.getStringExtra("address");
+        String distance=data.getStringExtra("distance");
+        String sql="insert into   student (name,phone,address,distance) values('"+name+"','"+phone+"','"+address+"','"+distance+"')";
+        DatabaseUtil databaseUtil=new DatabaseUtil(this,username,null,1);
+        SQLiteDatabase sqLiteDatabase=databaseUtil.getWritableDatabase();
+        sqLiteDatabase.execSQL(sql);
+        sqLiteDatabase.close();
+        arrayList=getStudentInfoFromDb();
+        showStudentNameAdapters.setArrayList(arrayList);
+        recyclerView.refreshDrawableState();
+        Toast.makeText(this, "添加成功", Toast.LENGTH_LONG).show();
+        Log.d(tag,address+distance);
     }
+
+    @Override
+    public void onDialogNegativeClick(Intent intent) {
+
+    }
+}
 
 

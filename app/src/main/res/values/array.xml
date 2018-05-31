@@ -45,6 +45,10 @@
 
 
     </array>
+    <array name="distance">
+        <item>"2-5公里"</item>
+        <item>"5公里以上"</item>
+    </array>
 
 
 </resources>

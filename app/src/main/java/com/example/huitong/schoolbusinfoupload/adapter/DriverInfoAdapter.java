@@ -1,11 +1,13 @@
 package com.example.huitong.schoolbusinfoupload.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.huitong.schoolbusinfoupload.R;
@@ -37,7 +39,18 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.In
     }
 
     @Override
-    public void onBindViewHolder(@NonNull InfoHolder holder, int position) {
+    public void onBindViewHolder(@NonNull InfoHolder holder, final int position) {
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("详细信息");
+                builder.setMessage("住址:"+arrayList.get(position).getAddress());
+                builder.setMessage("住址:"+arrayList.get(position).getAddress()+"\n"+"距离:"+arrayList.get(position).getDistance());
+                builder.setPositiveButton("确定", null);
+                builder.create().show();
+            }
+        });
         if (arrayList.get(position).getStatus()==1){
             holder.status.setText("乘车");
         }else {
@@ -60,13 +73,14 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.In
     }
 
     public class InfoHolder extends RecyclerView.ViewHolder {
-        private TextView name,phone,status,time;
+        private TextView name,phone,status,time;LinearLayout linearLayout;
         public InfoHolder(View itemView) {
             super(itemView);
             name=itemView.findViewById(R.id.driver_showname);
             phone=itemView.findViewById(R.id.driver_showphone);
             status=itemView.findViewById(R.id.driver_showstatus);
             time=itemView.findViewById(R.id.driver_showtiem);
+            linearLayout=itemView.findViewById(R.id.show_student_info);
 
         }
     }
