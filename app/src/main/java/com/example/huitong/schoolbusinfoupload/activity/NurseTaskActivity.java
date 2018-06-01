@@ -137,12 +137,11 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
                 long time = System.currentTimeMillis();
                 final Calendar mCalendar = Calendar.getInstance();
                 mCalendar.setTimeInMillis(time);
-
-                int hour = mCalendar.get(Calendar.HOUR);
-                Date date=mCalendar.getTime();
+                int HOUT=mCalendar.get(Calendar.HOUR_OF_DAY);
+                int  MINUTE=mCalendar.get(Calendar.MINUTE);
+                String date_time=HOUT+":"+MINUTE;
                 java.sql.Date  date1=new java.sql.Date(mCalendar.getTime().getTime());
                 int apm = mCalendar.get(Calendar.AM_PM);
-
                 StudentStatus studentStatus;
                 for (int i=0;i<studens.size();i++){
                     studentStatus=new StudentStatus();
@@ -158,6 +157,7 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
                     studentStatus.setNurseName(nurseName);
                     studentStatus.setTakeTime(date1);
                     studentStatus.setTimeQuantum(apm);
+                    studentStatus.setDateTime(date_time);
                     studentStatus.setStatus(studens.get(i).getStatus());
                     jsonArray.add(studentStatus);
 

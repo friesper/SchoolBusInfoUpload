@@ -16,10 +16,19 @@ public class StudentStatus  {
     private String studentName;
     private String studentPhone;
     private Integer timeQuantum;
+    private String dateTime;
     private String busNumber;
     private String status;
     private String address;
     private String  distance;
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
 
     public String getDistance() {
         return distance;
