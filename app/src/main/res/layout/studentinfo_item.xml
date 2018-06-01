@@ -42,13 +42,16 @@
         android:layout_height="match_parent"
         android:id="@+id/student_item_address"
         />
-    <CheckBox
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_width="0dp"
-        android:layout_weight="2"
-        android:layout_height="match_parent"
-        android:id="@+id/student_item_status"/>
+
+            <Spinner
+                android:id="@+id/student_item_status"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="clip_horizontal"
+                android:layout_weight="2"
+                android:background="@android:color/transparent"
+                android:entries="@array/status"
+                android:textDirection="firstStrongLtr" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

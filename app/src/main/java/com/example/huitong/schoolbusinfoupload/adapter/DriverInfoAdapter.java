@@ -51,11 +51,7 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.In
                 builder.create().show();
             }
         });
-        if (arrayList.get(position).getStatus()==1){
-            holder.status.setText("乘车");
-        }else {
-            holder.status.setText("未乘车");
-        }
+            holder.status.setText(arrayList.get(position).getStatus());
         if (arrayList.get(position).getTimeQuantum()==1){
             holder.time.setText("上午");
 

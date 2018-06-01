@@ -8,7 +8,7 @@ public class Student {
     private Integer id;
     private String name;
     private String phone;
-    private boolean status=false;
+    private String status;
     private String address;
     private String  distance;
 
@@ -36,11 +36,11 @@ public class Student {
         this.id = id;
     }
 
-    public boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

@@ -158,12 +158,7 @@ public class NurseTaskActivity extends BaseActivity implements View.OnClickListe
                     studentStatus.setNurseName(nurseName);
                     studentStatus.setTakeTime(date1);
                     studentStatus.setTimeQuantum(apm);
-                    if (studens.get(i).getStatus()){
-                        studentStatus.setStatus(1);
-                    }
-                    else {
-                        studentStatus.setStatus(0);
-                    }
+                    studentStatus.setStatus(studens.get(i).getStatus());
                     jsonArray.add(studentStatus);
 
                 }

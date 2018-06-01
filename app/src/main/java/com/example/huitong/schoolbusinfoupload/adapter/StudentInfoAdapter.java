@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.huitong.schoolbusinfoupload.R;
@@ -44,13 +46,24 @@ public class StudentInfoAdapter extends RecyclerView.Adapter<StudentInfoAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull StuInfoHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final StuInfoHolder holder, final int position) {
         Log.d("debug",Integer.toString(position)+"size"+student.size());
 
         holder.sudent_name.setText(student.get(position).getName());
         holder.student_phone.setText(student.get(position).getPhone());
-        holder.studnet_status.setChecked(student.get(position).getStatus());
         holder.student_address.setText(student.get(position).getAddress());
+        student.get(position).setStatus(holder.studnet_status.getSelectedItem().toString());
+        holder.studnet_status.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                student.get(position).setStatus(adapterView.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @Override
@@ -61,7 +74,7 @@ public class StudentInfoAdapter extends RecyclerView.Adapter<StudentInfoAdapter.
     public class StuInfoHolder extends RecyclerView.ViewHolder {
         private TextView sudent_name;
         private TextView student_phone,student_address;
-        private CheckBox studnet_status;
+        private Spinner studnet_status;
 
         public StuInfoHolder(View itemView) {
             super(itemView);
@@ -69,13 +82,6 @@ public class StudentInfoAdapter extends RecyclerView.Adapter<StudentInfoAdapter.
             student_phone=itemView.findViewById(R.id.student_item_phone);
             sudent_name=itemView.findViewById(R.id.student_item_name);
             studnet_status=itemView.findViewById(R.id.student_item_status);
-            studnet_status.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    student.get(getLayoutPosition()).setStatus(b);
-                }
-            });
         }
-
     }
 }

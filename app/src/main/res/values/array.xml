@@ -49,6 +49,12 @@
         <item>"2-5公里"</item>
         <item>"5公里以上"</item>
     </array>
+    <array name="status">
+        <item>"乘车"</item>
+        <item>"未乘车"</item>
+        <item>请假</item>
+    </array>
+
 
 
 </resources>

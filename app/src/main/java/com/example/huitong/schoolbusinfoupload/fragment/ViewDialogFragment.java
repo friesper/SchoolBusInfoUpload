@@ -52,7 +52,7 @@ public class ViewDialogFragment extends DialogFragment {
                         dataList.add("5公里以上");
                         EditText name = (EditText) view.findViewById(R.id.addname);
                         EditText phone = (EditText) view.findViewById(R.id.addphone);
-                        EditText address = (EditText) view.findViewById(R.id.addphone);
+                        EditText address = (EditText) view.findViewById(R.id.address);
                         Spinner distance=view.findViewById(R.id.distance);
                         distance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override

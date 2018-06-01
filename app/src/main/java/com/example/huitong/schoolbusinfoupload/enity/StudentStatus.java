@@ -17,7 +17,7 @@ public class StudentStatus  {
     private String studentPhone;
     private Integer timeQuantum;
     private String busNumber;
-    private Integer status;
+    private String status;
     private String address;
     private String  distance;
 
@@ -37,11 +37,11 @@ public class StudentStatus  {
         this.address = address;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
