@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.huitong.schoolbusinfoupload.R;
 import com.example.huitong.schoolbusinfoupload.enity.Driver;
 import com.example.huitong.schoolbusinfoupload.enity.User;
+import com.example.huitong.schoolbusinfoupload.util.AESUtils;
 import com.example.huitong.schoolbusinfoupload.util.AndroidUtil;
 import com.example.huitong.schoolbusinfoupload.util.JumpTextWatcher;
 
@@ -105,8 +106,8 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText(LoginActivity.this,"账号和密码不能为空",Toast.LENGTH_LONG).show();
         } else {
             progressDialog.show();
-            user.setUserName(username.getText().toString());
-            user.setPassWord(password.getText().toString());
+            user.setUserName(AESUtils.encrypt("huitong",username.getText().toString()));
+            user.setPassWord(AESUtils.encrypt("huitong",password.getText().toString()));
             Log.d(tags,com.alibaba.fastjson.JSON.toJSONString(user));
             RequestBody requestBody=RequestBody.create(JSON, com.alibaba.fastjson.JSON.toJSONString(user));
          mOkHttpClient=new OkHttpClient.Builder()
