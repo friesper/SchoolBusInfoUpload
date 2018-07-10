@@ -106,8 +106,8 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText(LoginActivity.this,"账号和密码不能为空",Toast.LENGTH_LONG).show();
         } else {
             progressDialog.show();
-            user.setUserName(AESUtils.encrypt("1",username.getText().toString()));
-            user.setPassWord(AESUtils.encrypt("1",password.getText().toString()));
+            user.setUserName(AESUtils.encrypt("huitong",username.getText().toString()));
+            user.setPassWord(AESUtils.encrypt("huitong",password.getText().toString()));
             Log.d(tags,com.alibaba.fastjson.JSON.toJSONString(user));
             RequestBody requestBody=RequestBody.create(JSON, com.alibaba.fastjson.JSON.toJSONString(user));
          mOkHttpClient=new OkHttpClient.Builder()
